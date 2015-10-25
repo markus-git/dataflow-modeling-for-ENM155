@@ -186,6 +186,9 @@ public class Tokenizer {
             case '{':
                 this.back();
                 return new JSONObject(this);
+            case '[':
+            	this.back();
+            	return new JSONArray(this);
         }
 
         // Handle unquoted values, such as true and false.

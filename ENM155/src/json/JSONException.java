@@ -8,11 +8,11 @@ public class JSONException extends RuntimeException {
         super(message);
     }
 
-    public JSONException(final String message, final Throwable cause) {
+	public JSONException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
-    public JSONException(final Throwable cause) {
+	public JSONException(final Throwable cause) {
         super(cause.getMessage(), cause);
     }
 }
