@@ -3,40 +3,33 @@ import java.util.List;
 
 public class Node {
 
-	private double     demand;
+	private double     need;
 	private List<Edge> inputs;
 	
 	public Node() {
-		this.demand = 0;
+		this.need   = 0;
 		this.inputs = new ArrayList<>();
 	}
 	
 	// ------------------------------------------
-	// Input/Output
 	
 	public void init(double x) {
-		demand = x;
+		need = x;
 	}
 	
 	public double read() {
-		return demand;
+		return need;
 	}
 	
-	// ------------------------------------------
-	// Calculations
-	
 	public void supply(double x) {
-		demand += x;
+		need += x;
 		demand();
 	}
 	
 	public void demand() {
 		for (Edge e : inputs)
-			e.demand(demand);
+			e.demand(need);
 	}
-	
-	// ------------------------------------------
-	// Connections
 	
 	public void connect(Edge e) {
 		inputs.add(e);
