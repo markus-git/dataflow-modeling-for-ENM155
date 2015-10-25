@@ -12,6 +12,6 @@
 hs_err_pid*
 
 # Mac #
-.DS_Store
-.setting/*
-bin/*
+*.DS_Store
+*.setting/*
+*/bin/*
