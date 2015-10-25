@@ -6,13 +6,13 @@ import java.util.Map;
 public class JSONObject {
 	
 	/** ... */
-	private final Map<String, Object> objects;
+    private final Map<String, Object> objects;
 	
-	public JSONObject() {
+    public JSONObject() {
         this.objects = new HashMap<String, Object>();
     }
 	
-	public JSONObject(Tokenizer x) throws JSONException {
+    public JSONObject(Tokenizer x) throws JSONException {
         this();
         char c;
         String key;
@@ -58,17 +58,17 @@ public class JSONObject {
 	// ------------------------------------------
 	
 	/** Tries to find key in store, returning its associated value if found. */
-	public Object find(String key) {
+    public Object find(String key) {
         return key == null ? null : this.objects.get(key);
     }
 	
 	/** Deletes a key/value pair from store. */
-	public Object remove(String key) {
+    public Object remove(String key) {
         return this.objects.remove(key);
     }
 	
 	/** Insert object into store */
-	public JSONObject put(String key, Object value) throws JSONException {
+    public JSONObject put(String key, Object value) throws JSONException {
         if (key == null) {
             throw new NullPointerException("Null key.");
         }
@@ -81,7 +81,7 @@ public class JSONObject {
     }
 	
 	/** Insert object into store iff key is unique. */
-	public JSONObject putObject(String key, Object value) throws JSONException {
+    public JSONObject putObject(String key, Object value) throws JSONException {
         if (key != null && value != null) {
             if (find(key) != null) {
                 throw new JSONException("Duplicate key \"" + key + "\"");
@@ -94,7 +94,7 @@ public class JSONObject {
 	// ------------------------------------------
 	
 	/** Tries to parse the string as a value. */
-	public static Object stringToValue(String string) {
+    public static Object stringToValue(String string) {
         if (string.isEmpty()) {
             return string;
         }
@@ -138,7 +138,7 @@ public class JSONObject {
 	// ------------------------------------------
 	
 	/** Tries to fetch the object associated with the key. */
-	public Object get(String key) throws JSONException {
+    public Object get(String key) throws JSONException {
         if (key == null) {
             throw new NullPointerException("Null key.");
         }
@@ -150,7 +150,7 @@ public class JSONObject {
     }
 	
 	/** Tries to fetch an boolean associated with the key. */
-	public boolean getBoolean(String key) throws JSONException {
+    public boolean getBoolean(String key) throws JSONException {
         Object object = this.get(key);
         if (object.equals(Boolean.FALSE)
                 || (object instanceof String && ((String) object)
@@ -165,7 +165,7 @@ public class JSONObject {
     }
 	
 	/** Tries to fetch a double associated with the key. */
-	public double getDouble(String key) throws JSONException {
+    public double getDouble(String key) throws JSONException {
         Object object = this.get(key);
         try {
         	if (object instanceof Number) {
@@ -179,7 +179,7 @@ public class JSONObject {
     }
 	
 	/** Tries to fetch an integer associated with the key. */
-	public int getInteger(String key) throws JSONException {
+    public int getInteger(String key) throws JSONException {
         Object object = get(key);
         try {
         	if (object instanceof Number) {

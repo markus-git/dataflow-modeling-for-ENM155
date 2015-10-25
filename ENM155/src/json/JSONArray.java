@@ -5,13 +5,13 @@ import java.util.Iterator;
 
 public class JSONArray implements Iterable<Object> {
 
-	private final ArrayList<Object> array;
+    private final ArrayList<Object> array;
 	
-	public JSONArray() {
+    public JSONArray() {
         this.array = new ArrayList<Object>();
     }
 	
-	public JSONArray(Tokenizer x) throws JSONException {
+    public JSONArray(Tokenizer x) throws JSONException {
         this();
         if (x.token() != '[') {
             throw new JSONException("A JSONArray text must start with '['");
@@ -36,15 +36,15 @@ public class JSONArray implements Iterable<Object> {
 	
 	// ------------------------------------------
 	
-	public int length() {
+    public int length() {
 		return array.size();
 	}
 	
-	public Object find(int index) {
+    public Object find(int index) {
         return (index < 0 || index >= length()) ? null : array.get(index);
     }
 	
-	public Object get(int index) throws JSONException {
+    public Object get(int index) throws JSONException {
         Object object = this.find(index);
         if (object == null) {
             throw new JSONException("JSONArray[" + index + "] not found.");
@@ -52,7 +52,7 @@ public class JSONArray implements Iterable<Object> {
         return object;
     }
 	
-	public JSONObject getJSONObject(int index) throws JSONException {
+   public JSONObject getJSONObject(int index) throws JSONException {
         Object object = this.get(index);
         if (object instanceof JSONObject) {
             return (JSONObject) object;
@@ -63,8 +63,8 @@ public class JSONArray implements Iterable<Object> {
 	// ------------------------------------------
 	
 	@Override
-	public Iterator<Object> iterator() {
+    public Iterator<Object> iterator() {
 		return array.iterator();
-	}
+    }
 
 }
