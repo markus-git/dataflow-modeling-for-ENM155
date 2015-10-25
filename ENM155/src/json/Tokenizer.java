@@ -2,8 +2,6 @@ package json;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Reader;
 
 public class Tokenizer {
@@ -28,10 +26,6 @@ public class Tokenizer {
         this.index       = 0;
         this.character   = 1;
         this.line        = 1;
-    }
-
-    public Tokenizer(InputStream inputStream) throws JSONException {
-        this(new InputStreamReader(inputStream));
     }
     
     // ------------------------------------------
@@ -72,8 +66,8 @@ public class Tokenizer {
         char[] chars = new char[n];
         int    pos   = 0;
 
-        while (pos < n && !this.end()) {
-            chars[pos++] = this.next();
+        while (pos < n && !end()) {
+            chars[pos++] = next();
         }
         
         return new String(chars);
@@ -81,13 +75,12 @@ public class Tokenizer {
     
     /** Get next whole token, skipping whitespace. */
     public char token() throws JSONException {
-    	char c;
-    	
-    	do {
-    		c = this.next();
-    	} while (c == 0 || c > ' ');
-    	
-    	return c;
+    	while (true) {
+    		char c = next();
+    		if (c == 0 || c > ' ') {
+    			return c;
+    		}
+    	}
     }
     
     /** At end of file? */
@@ -97,12 +90,11 @@ public class Tokenizer {
     
     /** Check if there are more tokens to consume */
     public boolean more() throws JSONException {
-        this.next();
-        
-        if (this.end()) {
+        next();
+        if (end()) {
             return false;
         } else {
-        	this.back();
+        	back();
             return true;
         }
     }
@@ -126,14 +118,14 @@ public class Tokenizer {
         StringBuilder sb = new StringBuilder();
         
         while (true) {
-            c = this.next();
+            c = next();
             switch (c) {
             case 0:
             case '\n':
             case '\r':
                 throw new JSONException("Unterminated string");
             case '\\':
-                c = this.next();
+                c = next();
                 switch (c) {
                 case 'b':
                     sb.append('\b');
@@ -175,14 +167,14 @@ public class Tokenizer {
     
     /** ... */
     public Object nextValue() throws JSONException {
-        char c = this.token();
+        char c = token();
         String string;
 
         // ToDo: Handle more JSON things.
         switch (c) {
             case '"':
             case '\'':
-                return this.nextString(c);
+                return nextString(c);
             case '{':
                 this.back();
                 return new JSONObject(this);
@@ -195,7 +187,7 @@ public class Tokenizer {
         StringBuilder sb = new StringBuilder();
         while (c >= ' ' && ",:]}/\\\"[{;=#".indexOf(c) < 0) {
             sb.append(c);
-            c = this.next();
+            c = next();
         }
         this.back();
 
