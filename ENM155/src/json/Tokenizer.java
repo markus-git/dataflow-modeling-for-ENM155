@@ -162,10 +162,10 @@ public class Tokenizer {
             case '\'':
                 return nextString(c);
             case '{':
-                this.back();
+                back();
                 return new JSONObject(this);
             case '[':
-            	this.back();
+            	back();
             	return new JSONArray(this);
         }
 
@@ -175,7 +175,7 @@ public class Tokenizer {
             sb.append(c);
             c = next();
         }
-        this.back();
+        back();
 
         string = sb.toString().trim();
         if (string.isEmpty()) {

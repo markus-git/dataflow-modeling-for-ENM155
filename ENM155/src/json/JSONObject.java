@@ -147,6 +147,16 @@ public class JSONObject {
             return object;
         }
     }
+    
+    /** Tries to fetch a string associated with the key. */
+    public String getString(String key) throws JSONException {
+        Object object = get(key);
+        if (object instanceof String) {
+            return (String) object;
+        } else {
+            throw new JSONException("get(" + key + ") is not a string.");
+        }
+    }
 	
 	/** Tries to fetch an boolean associated with the key. */
     public boolean getBoolean(String key) throws JSONException {
