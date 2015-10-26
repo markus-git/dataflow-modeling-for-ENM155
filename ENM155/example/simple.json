@@ -9,9 +9,9 @@
       {
         "edge-from" : "B",
         "edge-to"   : "A",
-        "edge-part" : 1.00,
-        "edge-efficiency"  : 0.75,
-        "edge-loss" : 0.01
+        "edge-loss" : 0.01,
+        "edge-distribution" : 1.00,
+        "edge-efficiency"   : 0.75
       }
     ]}
 }
