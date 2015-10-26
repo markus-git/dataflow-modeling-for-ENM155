@@ -52,7 +52,12 @@ public class JSONObject {
     }
 
 	// ------------------------------------------
-	
+    
+    /** Tries to find indexed object */
+    public boolean elem(String key) {
+    	return find(key) == null ? false : true;
+    }
+    
     private Object find(String key) {
         return key == null ? null : this.objects.get(key);
     }
