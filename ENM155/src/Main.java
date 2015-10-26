@@ -39,38 +39,48 @@ public class Main {
     	JSONArray  nodes  = header.getJSONArray("nodes");
     	JSONArray  edges  = header.getJSONArray("edges");
     	
+    	// Read nodes.
     	List<Node>       ns  = new ArrayList<>(nodes.length());
     	Iterator<Object> nit = nodes.iterator();
     	while (nit.hasNext()) {
     		Object node = nit.next();
     		if (node instanceof JSONObject) {
-    			String name = ((JSONObject) node).getString("node-name");
-    			// ToDo: Read demand and mark root nodes
+    			JSONObject o = (JSONObject) node;
     			
-    			ns.add(new Node(name, 0));
+    			// Read fields.
+    			String name = o.getString("node-name");
+    			double need = readDefault("node-demand", o, 0.0);
+    		    
+    			// Add new node.
+    			ns.add(new Node(name, need));
     			
+    			// Print name if successfully added.
     			System.out.println("New Node: " + name);
     		} else {
     			throw new JSONException("Node elements should be JSONObjects");
     		}
     	}
     	
+    	// Read edges.
     	Iterator<Object> eit = edges.iterator();
     	while (eit.hasNext()) {
     		Object edge = eit.next();
     		if (edge instanceof JSONObject) {
-    			String from = ((JSONObject) edge).getString("edge-from");
-    			String to   = ((JSONObject) edge).getString("edge-to");
-    			// ToDo: Same as node, i.e. read rest of data fields..
+    			JSONObject o = (JSONObject) edge;
     			
+    			// Read fields.
+    			String from = o.getString("edge-from");
+    			String to   = o.getString("edge-to");
+    			double loss = readDefault("edge-loss", o, 0.0);
+    			double dist = readDefault("edge-distribution", o, 1.0);
+    			double eff  = readDefault("edge-efficiency", o, 1.0);
+    			
+    			// Lookup nodes referenced and add new edge.
     			Node f = findNode(from, ns);
     			Node t = findNode(to,   ns);
-    			t.connect(new Edge(
-    					0.01, // loss, 
-    					1.00, // distribution, 
-    					0.75, // efficiency, 
-    					f));
+    			t.connect(new Edge(loss, dist, eff, f));
     			
+    			// Print connection if successfully added.
     			System.out.println("New Edge from " + from + " to " + to);
     		} else {
     			throw new JSONException("Edge elements should be JSONObjects");
@@ -80,8 +90,14 @@ public class Main {
     	return ns;
     }
     
-    // This should probably be improved...
+    /** Tries to lookup value of given field, returns 'def' if not found. */
+    private double readDefault (String key, JSONObject o, double def) {
+    	return o.elem(key) ? o.getDouble(key) : def;
+    }
+    
+    /** Tries to find the referenced Node in the given list. */
     private Node findNode(String name, List<Node> nodes) {
+    	// This should probably be improved...
     	for (Node n : nodes) {
     		if (n.getName().equals(name)) {
     			return n;
