@@ -142,11 +142,13 @@ public class JSONObject {
         if (key == null) {
             throw new NullPointerException("Null key.");
         }
+        
         Object object = find(key);
         if (object == null) {
             throw new JSONException("JSONObject[" + key + "] not found.");
+        } else {
+            return object;
         }
-        return object;
     }
 	
 	/** Tries to fetch an boolean associated with the key. */
@@ -160,8 +162,9 @@ public class JSONObject {
                 || (object instanceof String && ((String) object)
                         .equalsIgnoreCase("true"))) {
             return true;
+        } else {
+            throw new JSONException("JSONObject[" + key + "] is not a Boolean.");
         }
-        throw new JSONException("JSONObject[" + key + "] is not a Boolean.");
     }
 	
 	/** Tries to fetch a double associated with the key. */
@@ -189,6 +192,15 @@ public class JSONObject {
         	}
         } catch (Exception e) {
             throw new JSONException("JSONObject[" + key + "] is not an int.");
+        }
+    }
+    
+    public JSONArray getJSONArray(String key) throws JSONException {
+        Object object = get(key);
+        if (object instanceof JSONArray) {
+            return (JSONArray) object;
+        } else {
+            throw new JSONException("JSONObject[" + key + "] is not a JSONArray.");
         }
     }
 }
