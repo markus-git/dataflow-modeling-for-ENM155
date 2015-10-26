@@ -27,7 +27,7 @@ public class Tokenizer {
     // ------------------------------------------
     
     /** Get next character in the source string. */
-    public char next() throws JSONException {
+    private char next() throws JSONException {
         int c;
         if (this.usePrevious) {
             this.usePrevious = false;
@@ -49,7 +49,7 @@ public class Tokenizer {
     }
     
     /** Get next 'n' characters in the source string. */
-    public String next(int n) throws JSONException {
+    private String next(int n) throws JSONException {
         char[] chars = new char[n];
         int    pos   = 0;
 
