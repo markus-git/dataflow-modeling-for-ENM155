@@ -87,7 +87,6 @@ public class Main {
     			return n;
     		}
     	}
-    		
     	throw new JSONException("Could not find node '" + name + "'");
     }
 	
