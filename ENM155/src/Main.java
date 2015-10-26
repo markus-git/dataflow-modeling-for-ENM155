@@ -20,13 +20,7 @@ public class Main {
 		List<Node> nodes  = buildExample(simple);
 	
 		// Demand supply for each node that needs it.
-		List<Node> roots = new ArrayList<>();
 		for (Node n : nodes) {
-			if (n.getDemand() > 0) {
-				roots.add(n);
-			}
-		}
-		for (Node n : roots) {
 			n.demand();
 		}
 		
@@ -42,9 +36,9 @@ public class Main {
     	try {
     	    return new JSONObject(
         	         new Tokenizer(
-                     new BufferedReader(
-                     new FileReader(
-        		       "example/simple.json"))));
+                       new BufferedReader(
+                         new FileReader(
+        		           "example/simple.json"))));
     	} catch (FileNotFoundException e) {
     		throw new JSONException("Could not find example file.");
     	}
