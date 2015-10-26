@@ -5,13 +5,14 @@ import java.util.Map;
 
 public class JSONObject {
 	
-	/** ... */
+	/** Mapping over fields in JSON object. */
     private final Map<String, Object> objects;
 	
-    public JSONObject() {
+    private JSONObject() {
         this.objects = new HashMap<String, Object>();
     }
 	
+    /** Construct a JSONObject from the given token stream. */
     public JSONObject(Tokenizer x) throws JSONException {
         this();
         String key;
