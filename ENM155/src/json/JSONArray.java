@@ -50,7 +50,7 @@ public class JSONArray implements Iterable<Object> {
     public Object get(int index) throws JSONException {
         Object object = find(index);
         if (object == null) {
-            throw new JSONException("JSONArray[" + index + "] not found.");
+            throw new JSONException("get(" + index + ") not found.");
         }
         return object;
     }
@@ -61,7 +61,7 @@ public class JSONArray implements Iterable<Object> {
         if (object instanceof JSONObject) {
             return (JSONObject) object;
         }
-        throw new JSONException("JSONArray[" + index + "] is not a JSONObject.");
+        throw new JSONException("get(" + index + ") is not a JSONObject.");
     }
 	
 	// ------------------------------------------

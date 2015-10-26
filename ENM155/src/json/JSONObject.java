@@ -14,7 +14,6 @@ public class JSONObject {
 	
     public JSONObject(Tokenizer x) throws JSONException {
         this();
-        char c;
         String key;
 
         if (x.token() != '{') {
@@ -57,8 +56,7 @@ public class JSONObject {
 
 	// ------------------------------------------
 	
-	/** Tries to find key in store, returning its associated value if found. */
-    public Object find(String key) {
+    private Object find(String key) {
         return key == null ? null : this.objects.get(key);
     }
 	
@@ -67,7 +65,6 @@ public class JSONObject {
         return this.objects.remove(key);
     }
 	
-	/** Insert object into store */
     private JSONObject put(String key, Object value) throws JSONException {
         if (key == null) {
             throw new NullPointerException("Null key.");
@@ -145,7 +142,7 @@ public class JSONObject {
         
         Object object = find(key);
         if (object == null) {
-            throw new JSONException("JSONObject[" + key + "] not found.");
+            throw new JSONException("get(" + key + ") not found (null).");
         } else {
             return object;
         }
@@ -163,7 +160,7 @@ public class JSONObject {
                         .equalsIgnoreCase("true"))) {
             return true;
         } else {
-            throw new JSONException("JSONObject[" + key + "] is not a Boolean.");
+            throw new JSONException("get(" + key + ") is not a Boolean.");
         }
     }
 	
@@ -177,7 +174,7 @@ public class JSONObject {
         		return Double.parseDouble((String) object);
         	}
         } catch (Exception e) {
-            throw new JSONException("JSONObject[" + key + "] is not a number.");
+            throw new JSONException("get(" + key + ") is not a number.");
         }
     }
 	
@@ -191,7 +188,16 @@ public class JSONObject {
         		return Integer.parseInt((String) object);
         	}
         } catch (Exception e) {
-            throw new JSONException("JSONObject[" + key + "] is not an int.");
+            throw new JSONException("get(" + key + ") is not an int.");
+        }
+    }
+    
+    public JSONObject getJSONObject(String key) throws JSONException {
+        Object object = this.get(key);
+        if (object instanceof JSONObject) {
+            return (JSONObject) object;
+        } else {
+            throw new JSONException("get(" + key + ") is not a JSONObject.");
         }
     }
     
@@ -200,7 +206,7 @@ public class JSONObject {
         if (object instanceof JSONArray) {
             return (JSONArray) object;
         } else {
-            throw new JSONException("JSONObject[" + key + "] is not a JSONArray.");
+            throw new JSONException("get(" + key + ") is not a JSONArray.");
         }
     }
 }
