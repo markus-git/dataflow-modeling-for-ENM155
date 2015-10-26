@@ -3,23 +3,17 @@ import java.util.List;
 
 public class Node {
 
+	private String     name;
 	private double     need;
 	private List<Edge> inputs;
 	
-	public Node() {
-		this.need   = 0;
+	public Node(String name, double need) {
+		this.name   = name;
+		this.need   = need;
 		this.inputs = new ArrayList<>();
 	}
 	
 	// ------------------------------------------
-	
-	public void init(double x) {
-		need = x;
-	}
-	
-	public double read() {
-		return need;
-	}
 	
 	public void supply(double x) {
 		need += x;
@@ -33,5 +27,15 @@ public class Node {
 	
 	public void connect(Edge e) {
 		inputs.add(e);
+	}
+	
+	// ------------------------------------------
+	
+	public String getName() {
+		return name;
+	}
+	
+	public double getDemand() {
+		return need;
 	}
 }
