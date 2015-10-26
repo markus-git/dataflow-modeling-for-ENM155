@@ -41,11 +41,7 @@ public class JSONObject {
             switch (x.token()) {
             case ';':
             case ',':
-                if (x.token() == '}') {
-                    return;
-                }
-                x.back();
-                break;
+                continue;
             case '}':
                 return;
             default:
