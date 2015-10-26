@@ -68,7 +68,7 @@ public class JSONObject {
     }
 	
 	/** Insert object into store */
-    public JSONObject put(String key, Object value) throws JSONException {
+    private JSONObject put(String key, Object value) throws JSONException {
         if (key == null) {
             throw new NullPointerException("Null key.");
         }
