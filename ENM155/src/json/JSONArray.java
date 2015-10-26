@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 public class JSONArray implements Iterable<Object> {
 
+	/** Array elements */
     private final ArrayList<Object> array;
 	
     public JSONArray() {
@@ -36,24 +37,27 @@ public class JSONArray implements Iterable<Object> {
 	
 	// ------------------------------------------
 	
+    /** Number of elements in array. */
     public int length() {
 		return array.size();
 	}
 	
-    public Object find(int index) {
+    private Object find(int index) {
         return (index < 0 || index >= length()) ? null : array.get(index);
     }
 	
+    /** Tries to fetch element at given index. */
     public Object get(int index) throws JSONException {
-        Object object = this.find(index);
+        Object object = find(index);
         if (object == null) {
             throw new JSONException("JSONArray[" + index + "] not found.");
         }
         return object;
     }
 	
+    /** Tries to fetch JSON object at given index. */
    public JSONObject getJSONObject(int index) throws JSONException {
-        Object object = this.get(index);
+        Object object = get(index);
         if (object instanceof JSONObject) {
             return (JSONObject) object;
         }
