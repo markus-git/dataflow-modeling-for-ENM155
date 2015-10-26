@@ -13,24 +13,41 @@ import json.Tokenizer;
 public class Main {
 
     private Main() {
-		JSONObject simple;
-		
-		try {
-			simple = readExample();
-		} catch (FileNotFoundException e) {
-			throw new RuntimeException("could not load example file");
+    	
+    	// Build example.
+    	System.out.println("-- Construction");
+		JSONObject simple = readExample();
+		List<Node> nodes  = buildExample(simple);
+	
+		// Demand supply for each node that needs it.
+		List<Node> roots = new ArrayList<>();
+		for (Node n : nodes) {
+			if (n.getDemand() > 0) {
+				roots.add(n);
+			}
+		}
+		for (Node n : roots) {
+			n.demand();
 		}
 		
-		buildExample(simple);
+		// Display (temp solution) node values.
+		System.out.println("-- Values");
+		for (Node n : nodes) {
+			System.out.println("Node " + n.getName() + " needs " + n.getDemand());
+		}
 	}
 	
     /** Read example file and create main JSONObject */
-    private JSONObject readExample() throws FileNotFoundException {
-    	return new JSONObject(
-        		 new Tokenizer(
-                 new BufferedReader(
-                 new FileReader(
-        		    "example/simple.json"))));   
+    private JSONObject readExample() {
+    	try {
+    	    return new JSONObject(
+        	         new Tokenizer(
+                     new BufferedReader(
+                     new FileReader(
+        		       "example/simple.json"))));
+    	} catch (FileNotFoundException e) {
+    		throw new JSONException("Could not find example file.");
+    	}
 	}
     
     /** Parse JSON to produce node graph */
