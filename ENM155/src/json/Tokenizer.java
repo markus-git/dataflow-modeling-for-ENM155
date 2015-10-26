@@ -6,10 +6,8 @@ import java.io.Reader;
 
 public class Tokenizer {
 
-    private long    character;
     private boolean eof;
     private long    index;
-    private long    line;
     private char    previous;
     private Reader  reader;
     private boolean usePrevious;
@@ -24,8 +22,6 @@ public class Tokenizer {
         this.usePrevious = false;
         this.previous    = 0;
         this.index       = 0;
-        this.character   = 1;
-        this.line        = 1;
     }
     
     // ------------------------------------------
@@ -47,16 +43,7 @@ public class Tokenizer {
             	c        = 0;
             }
         }
-        this.index += 1;
-        if (this.previous == '\r') {
-            this.line     += 1;
-            this.character = c == '\n' ? 0 : 1;
-        } else if (c == '\n') {
-            this.line     += 1;
-            this.character = 0;
-        } else {
-            this.character += 1;
-        }
+        this.index   += 1;
         this.previous = (char) c;
         return this.previous;
     }
@@ -105,7 +92,6 @@ public class Tokenizer {
             throw new JSONException("Can only back up one step at a time");
         }
         this.index      -= 1;
-        this.character  -= 1;
         this.usePrevious = true;
         this.eof         = false;
     }
