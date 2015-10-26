@@ -4,6 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 
+/**
+ * You probably do not need to understand this module. It simply tries
+ * to read tokens from a given reader, returning JSON objects as it goes.
+ */
 public class Tokenizer {
 
     private boolean eof;
