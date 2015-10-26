@@ -7,8 +7,8 @@
         "node-name" : "B" }],
     "edges" : [
       {
-        "edge-in" : "A",
-        "edge-out" : "B",
+        "edge-from" : "B",
+        "edge-to"   : "A",
         "edge-part" : 1.00,
         "edge-efficiency"  : 0.75,
         "edge-loss" : 0.01
