@@ -27,6 +27,8 @@ public class Edge {
 	 * B needs to produce 'x / 0.75'. Where '0.75' is the 'efficiency'.
 	 */
 	private double efficiency;
+	
+	/** Node on the other end of this edge. */
 	private Node   node;
 	
 	/** Construct an edge from the given parameters. */
