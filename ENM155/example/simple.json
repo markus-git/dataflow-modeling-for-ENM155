@@ -2,7 +2,7 @@
     "nodes" : [
       {
         "node-name"   : "A",
-        "node-demand" : 200 },
+        "node-demand" : 200.00 },
       {
         "node-name" : "B" }],
     "edges" : [
