@@ -53,4 +53,10 @@ public class Edge {
 		
 		node.supply(received);
 	}
+	
+	// ------------------------------------------
+	
+	public Node getOrigin() {
+		return this.node;
+	}
 }

@@ -52,11 +52,15 @@ public class Node {
 	
 	/** Gets the node's name. */
 	public String getName() {
-		return name;
+		return this.name;
 	}
 	
 	/** Gets the node's current demand. */
 	public double getDemand() {
-		return need;
+		return this.need;
+	}
+	
+	public List<Edge> getInputs() {
+		return this.inputs;
 	}
 }

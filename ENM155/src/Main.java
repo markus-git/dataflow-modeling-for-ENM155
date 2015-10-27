@@ -1,9 +1,18 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.management.RuntimeErrorException;
 
 import json.JSONArray;
 import json.JSONException;
@@ -24,11 +33,14 @@ public class Main {
 			n.demand();
 		}
 		
-		// Display (temp solution) node values.
+		// Display node values.
 		System.out.println("-- Values");
 		for (Node n : nodes) {
 			System.out.println("Node " + n.getName() + " needs " + n.getDemand());
 		}
+		
+		// Display graph as .dot file.
+		showExample(nodes);
 	}
 	
     /** Read example file and create main JSONObject */
@@ -99,6 +111,25 @@ public class Main {
     	}
     	
     	return ns;
+    }
+    
+    /** Display example file as a pdf using dot. (Or using http://webgraphviz.com with the generated dot file) */
+    private void showExample(List<Node> nodes) {
+		try {
+			Writer writer = new BufferedWriter(
+					          new OutputStreamWriter(
+	                            new FileOutputStream("example/simple.dot"), "utf-8"));
+			writer.write("digraph simple {\n");
+			for (Node n : nodes) {
+				for (Edge e : n.getInputs()) {
+					writer.write('\t' + e.getOrigin().getName() + " -> " + n.getName() + '\n');
+				}
+			}
+			writer.write('}');
+			writer.close();
+		} catch (IOException e) {
+			throw new RuntimeException("Could not write 'dot' file.", e);
+		}
     }
     
     /** Tries to lookup value of given field, returns 'def' if not found. */
