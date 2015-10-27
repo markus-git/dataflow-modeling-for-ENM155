@@ -41,6 +41,11 @@ public class JSONArray implements Iterable<Object> {
     public int length() {
 		return array.size();
 	}
+    
+    /** Checks if array is empty. */
+    public boolean isEmpty() {
+    	return this.length() == 0;
+    }
 	
     private Object find(int index) {
         return (index < 0 || index >= length()) ? null : array.get(index);

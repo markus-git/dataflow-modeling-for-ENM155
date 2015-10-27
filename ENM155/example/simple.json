@@ -1,17 +1,21 @@
-{ "simple" : {
+{ "graph" : {
     "nodes" : [
       {
         "node-name"   : "A",
-        "node-demand" : 200.00 },
+        "node-demand" : 200.00,
+        "node-rates"  : [
+          { "rate-from"       : "B",
+            "rate-efficiency" : 0.75
+          }
+        ]},
       {
-        "node-name" : "B" }],
+        "node-name"  : "B" }],
     "edges" : [
       {
-        "edge-from" : "B",
-        "edge-to"   : "A",
-        "edge-loss" : 0.01,
-        "edge-distribution" : 1.00,
-        "edge-efficiency"   : 0.75
+        "edge-from"  : "B",
+        "edge-to"    : "A",
+        "edge-loss"  : 0.01,
+        "edge-share" : 1.00
       }
     ]}
 }

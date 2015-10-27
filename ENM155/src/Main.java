@@ -1,15 +1,14 @@
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
+import graph.Graph;
+import graph.Pair;
+import graph.directed.DirectedGraph;
 import json.JSONArray;
 import json.JSONException;
 import json.JSONObject;
@@ -17,134 +16,128 @@ import json.Tokenizer;
 
 public class Main {
 
-    private Main() {
-    	
-    	// Build example.
-    	System.out.println("-- Construction");
-		JSONObject simple = readExample();
-		List<Node> nodes  = buildExample(simple);
-	
-		// Demand supply for each node that needs it.
-		for (Node n : nodes) {
-			n.demand();
+	public Main() {
+		System.out.print("Loading example...");
+		JSONObject example = readExample();
+		System.out.println("\tDone!");
+		
+		System.out.print("Parsing example...");
+		DirectedGraph<MyVertex, MyEdge> graph   = parseExample(example);
+		System.out.println("\tDone!");
+		
+		System.out.print("Calculating demands...");
+		graph.calculateDemands();
+		System.out.println("\tDone!");
+		
+		for (MyVertex vertex : graph.getVertices()) {
+			System.out.println("- Node " + vertex.getName() + " : " + vertex.getDemand());
 		}
 		
-		// Display node values.
-		System.out.println("-- Values");
-		for (Node n : nodes) {
-			System.out.println("Node " + n.getName() + " needs " + n.getDemand());
-		}
+		System.out.print("Generating dot file...");
+		String dot = graph.generateDot();
+		System.out.println("\tDone!");
 		
-		// Display graph as .dot file.
-		showExample(nodes);
+		System.out.println(graph.generateDot());
 	}
 	
-    /** Read example file and create main JSONObject */
-    private JSONObject readExample() {
+	// ------------------------------------------------------------------------
+	// Read and translate JSON example file.
+	
+    /** Read example file and load main JSON object. */
+	private JSONObject readExample() {
     	try {
-    	    return new JSONObject(
-    	    		new Tokenizer(
-    	    	    new BufferedReader(
-    	    	    new FileReader(
-    	    	    	  "example/simple.json"))));
+    		return new JSONObject(new Tokenizer(new BufferedReader(new FileReader("example/simple.json"))));
     	} catch (FileNotFoundException e) {
     		throw new JSONException("Could not find example file.");
     	}
 	}
     
-    /** Parse JSON to produce node graph */
-    private List<Node> buildExample(JSONObject simple) {
-    	JSONObject header = simple.getJSONObject("simple");
+	/** Parse JSON object as a directed graph. */
+	private DirectedGraph<MyVertex, MyEdge> parseExample(JSONObject example) {
+		JSONObject header = example.getJSONObject("graph");
     	JSONArray  nodes  = header.getJSONArray("nodes");
     	JSONArray  edges  = header.getJSONArray("edges");
     	
-    	// Read nodes.
-    	List<Node>       ns  = new ArrayList<>(nodes.length());
-    	Iterator<Object> nit = nodes.iterator();
-    	while (nit.hasNext()) {
-    		Object node = nit.next();
-    		if (node instanceof JSONObject) {
-    			JSONObject o = (JSONObject) node;
+    	// Fetch all the nodes, rates will be added later to not cause loops.
+    	Map<String, MyVertex> ns = new HashMap<>();
+    	Set<Pair<String, Pair<String, Double>>> rs = new HashSet<>();
+    	for (Object o : nodes) {
+    		if (o instanceof JSONObject) {
+    			JSONObject node = (JSONObject) o;
     			
     			// Read fields.
-    			String name = o.getString("node-name");
-    			double need = readDefault("node-demand", o, 0.0);
-    		    
-    			// Add new node.
-    			ns.add(new Node(name, need));
+    			String name     = node.getString("node-name");
+    			double demand   = readDouble("node-demand", node, 0.0);
+    			JSONArray rates = readArray("node-rates",   node);
     			
-    			// Print name if successfully added.
-    			System.out.println("New Node: " + name);
-    		} else {
-    			throw new JSONException("Node elements should be JSONObjects");
+    			// Store rates
+    			for (Object j : rates) {
+    				if (j instanceof JSONObject) {
+    					JSONObject rate = (JSONObject) j;
+    					
+    					String from = rate.getString("rate-from");
+    					double eff  = readDouble("rate-efficiency", rate, 1.0);
+    					
+    					rs.add(new Pair<>(name, new Pair<>(from, eff)));
+    				}
+    			}
+    			
+    			// Store results.
+    			ns.put(name, new MyVertex(name, demand));
     		}
     	}
     	
-    	// Read edges.
-    	Iterator<Object> eit = edges.iterator();
-    	while (eit.hasNext()) {
-    		Object edge = eit.next();
-    		if (edge instanceof JSONObject) {
-    			JSONObject o = (JSONObject) edge;
+    	// Now that all nodes have been added we can add their rates.
+    	for (Pair<String, Pair<String, Double>> pair : rs) {
+    		MyVertex vertex = ns.get(pair.getKey());
+    		vertex.addRate(
+    				ns.get(pair.getValue().getKey()), 
+    				pair.getValue().getValue());
+    	}
+    	
+    	// Lastly we parse all edges.
+    	Set<Pair<MyEdge, Pair<MyVertex, MyVertex>>> es = new HashSet<>(); 
+    	for (Object o : edges) {
+    		if (o instanceof JSONObject) {
+    			JSONObject edge = (JSONObject) o;
     			
     			// Read fields.
-    			String from = o.getString("edge-from");
-    			String to   = o.getString("edge-to");
-    			double loss = readDefault("edge-loss", o, 0.0);
-    			double dist = readDefault("edge-distribution", o, 1.0);
-    			double eff  = readDefault("edge-efficiency", o, 1.0);
+    			String from  = edge.getString("edge-from");
+    			String to    = edge.getString("edge-to");
+    			double loss  = readDouble("edge-loss",  edge, 0.0);
+    			double share = readDouble("edge-share", edge, 1.0);
     			
-    			// Lookup nodes referenced and add new edge.
-    			Node f = findNode(from, ns);
-    			Node t = findNode(to,   ns);
-    			t.connect(new Edge(loss, dist, eff, f));
+    			MyVertex f = ns.get(from);
+    			MyVertex t = ns.get(to);
     			
-    			// Print connection if successfully added.
-    			System.out.println("New Edge from " + from + " to " + to);
-    		} else {
-    			throw new JSONException("Edge elements should be JSONObjects");
+    			es.add(new Pair<>(new MyEdge(loss, share), new Pair<>(f, t)));
     		}
     	}
     	
-    	return ns;
-    }
-    
-    /** Display example file as a pdf using dot. (Or using http://webgraphviz.com with the generated dot file) */
-    private void showExample(List<Node> nodes) {
-		try {
-			Writer writer = new BufferedWriter(
-					          new OutputStreamWriter(
-	                            new FileOutputStream("example/simple.dot"), "utf-8"));
-			writer.write("digraph simple {\n");
-			for (Node n : nodes) {
-				for (Edge e : n.getInputs()) {
-					writer.write('\t' + e.getOrigin().getName() + " -> " + n.getName() + '\n');
-				}
-			}
-			writer.write('}');
-			writer.close();
-		} catch (IOException e) {
-			throw new RuntimeException("Could not write 'dot' file.", e);
-		}
-    }
-    
-    /** Tries to lookup value of given field, returns 'def' if not found. */
-    private double readDefault (String key, JSONObject o, double def) {
-    	return o.elem(key) ? o.getDouble(key) : def;
-    }
-    
-    /** Tries to find the referenced Node in the given list. */
-    private Node findNode(String name, List<Node> nodes) {
-    	for (Node n : nodes) {
-    		if (n.getName().equals(name)) {
-    			return n;
-    		}
+    	// We can then create the graph.
+    	DirectedGraph<MyVertex, MyEdge> graph = new DirectedGraph<>();
+    	for (Pair<MyEdge, Pair<MyVertex, MyVertex>> pair : es) {
+    		graph.addEdge(
+    				pair.getKey(), 
+    				pair.getValue().getKey(), 
+    				pair.getValue().getValue());
     	}
     	
-    	throw new JSONException("Could not find node '" + name + "'");
-    }
+		return graph;
+	}
 	
-	// ------------------------------------------
+	/** Tries to lookup value of given field, returns 'def' if not found. */
+	private double readDouble(String key, JSONObject o, double def) {
+		return o.elem(key) ? o.getDouble(key) : def;
+	}
+	
+	/** Tries to lookup value of given field */
+	private JSONArray readArray(String key, JSONObject o) {
+		return o.elem(key) ? o.getJSONArray(key) : new JSONArray();
+	}
+	
+	// ------------------------------------------------------------------------
+	// Main stub.
 	
 	public static void main(String[] args) {
 		new Main();
