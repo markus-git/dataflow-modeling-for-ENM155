@@ -1,5 +1,6 @@
 package graph;
 
+/** Java representation of Tuples */
 public class Pair<K, V> {
 
     private K key;

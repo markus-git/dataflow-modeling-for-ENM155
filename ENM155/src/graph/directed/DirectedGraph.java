@@ -1,5 +1,7 @@
 package graph.directed;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -9,13 +11,26 @@ import java.util.Set;
 
 import graph.*;
 
+/**
+ * A implementation of the graph interface. Also provides a sample
+ * algorithm for solving the demand problem.
+ * 
+ * @param <V> - Kind used for vertices, assumed to extend Vertex interface.
+ * @param <E> - Kind used for edges, assumed to extend Edge interface.
+ */
 public class DirectedGraph<V extends Vertex, E extends Edge> implements Graph<V, E> {
 
+	/** Vertices are combined with a set of incoming/outgoing edges for each vertex. */
 	private Map<V, Pair<Set<E>, Set<E>>> vertices;
-	private Map<E, Pair<V, V>>           edges;
 	
+	/** Edges are combined with their source and destination vertices. */
+	private Map<E, Pair<V, V>> edges;
+	
+	/** Topological ordering of vertices with similar levels grouped (currently not used). */
 	private Map<V, Integer> levels;
-	private int             height;
+	
+	/** Maximum height of graph according to topological ordering (currently not used). */
+	private int height;
 	
 	public DirectedGraph() {
 		this.vertices = new HashMap<>();
@@ -27,6 +42,7 @@ public class DirectedGraph<V extends Vertex, E extends Edge> implements Graph<V,
 	// ------------------------------------------------------------------------
 	// ...
 	
+	/** ... */
 	public void calculateDemands() {
 		for (V vertex : vertices.keySet()) {
 			propagateDemand(vertex);
@@ -40,11 +56,11 @@ public class DirectedGraph<V extends Vertex, E extends Edge> implements Graph<V,
 			
 			// Calculate new demand.
 			double demanded = demand * edge.getShare(),
-				   produced = demanded / v.getEfficiency(source),
-				   received = produced * (1 - edge.getLoss());
+				   brutto   = demanded / v.getEfficiency(source),
+				   netto    = brutto   / (1 - edge.getLoss());
 			
 			// Update demand.
-			source.addDemand(received);
+			source.addDemand(netto);
 			propagateDemand(source);
 		}
 	}
@@ -66,7 +82,7 @@ public class DirectedGraph<V extends Vertex, E extends Edge> implements Graph<V,
 			dot.append("\t" +
 					  v.getLabel()  + "[ label=\"<f0> " + 
 					  v.getLabel()  + " |<f1> " +
-					  v.getDemand() + " \" ];\n"
+					  round(v.getDemand(), 2) + " \" ];\n"
 					);
 		}
 		
@@ -84,6 +100,10 @@ public class DirectedGraph<V extends Vertex, E extends Edge> implements Graph<V,
 		dot.append('}');
 		
 		return dot.toString();
+	}
+	
+	private double round(double value, int places) {
+		 return new BigDecimal(value).setScale(places, RoundingMode.HALF_UP).doubleValue();
 	}
 	
 	private void calculateLevels() {

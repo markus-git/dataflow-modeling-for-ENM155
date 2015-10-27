@@ -1,5 +1,6 @@
 package graph;
 
+/** Runtime exception used for reporting graph specific exceptions. */
 public class GraphException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
