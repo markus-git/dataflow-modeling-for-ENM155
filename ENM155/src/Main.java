@@ -5,14 +5,10 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import javax.management.RuntimeErrorException;
 
 import json.JSONArray;
 import json.JSONException;
@@ -47,10 +43,10 @@ public class Main {
     private JSONObject readExample() {
     	try {
     	    return new JSONObject(
-        	         new Tokenizer(
-                       new BufferedReader(
-                         new FileReader(
-        		           "example/simple.json"))));
+    	    		new Tokenizer(
+    	    	    new BufferedReader(
+    	    	    new FileReader(
+    	    	    	  "example/simple.json"))));
     	} catch (FileNotFoundException e) {
     		throw new JSONException("Could not find example file.");
     	}
@@ -139,12 +135,12 @@ public class Main {
     
     /** Tries to find the referenced Node in the given list. */
     private Node findNode(String name, List<Node> nodes) {
-    	// This should probably be improved...
     	for (Node n : nodes) {
     		if (n.getName().equals(name)) {
     			return n;
     		}
     	}
+    	
     	throw new JSONException("Could not find node '" + name + "'");
     }
 	

@@ -49,7 +49,7 @@ public class Edge {
 	public void demand(double x) {
 		double demanded = x * distribution,
 			   produced = demanded / efficiency,
-			   received = produced + produced * loss;
+			   received = produced * (1 - loss);
 		
 		node.supply(received);
 	}
