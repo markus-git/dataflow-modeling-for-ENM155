@@ -2,11 +2,9 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
+import java.util.Map.Entry;
 
-import graph.Pair;
 import graph.directed.DirectedGraph;
 import json.JSONArray;
 import json.JSONException;
@@ -29,10 +27,6 @@ public class Main {
 		graph.calculateDemands();
 		System.out.println("\tDone!");
 		
-		for (MyVertex vertex : graph.getVertices()) {
-			System.out.println("- Node " + vertex.getLabel() + " : " + vertex.getDemand());
-		}
-		
 		System.out.print("Generating dot file...");
 		String dot = graph.generateDot();
 		System.out.println("\tDone!");
@@ -40,7 +34,7 @@ public class Main {
 		// Graphs described as dot files can either be dsiplayed using the
 		// dot languages command line utilities or using the online service
 		// located at http://webgraphviz.com.
-		System.out.println(dot);
+		System.out.println('\n' + dot);
 	}
 	
 	// ------------------------------------------------------------------------
@@ -57,74 +51,50 @@ public class Main {
     
 	/** Parse JSON object as a directed graph. */
 	private DirectedGraph<MyVertex, MyEdge> parseExample(JSONObject example) {
-		JSONObject header = example.getJSONObject("graph");
-    	JSONArray  nodes  = header.getJSONArray("nodes");
-    	JSONArray  edges  = header.getJSONArray("edges");
-    	
-    	// Fetch all the nodes, rates will be added later to not cause loops.
-    	Map<String, MyVertex> ns = new HashMap<>();
-    	Set<Pair<String, Pair<String, Double>>> rs = new HashSet<>();
-    	for (Object o : nodes) {
-    		if (o instanceof JSONObject) {
-    			JSONObject node = (JSONObject) o;
-    			
-    			// Read fields.
-    			String name     = node.getString("node-name");
-    			double demand   = readDouble("node-demand", node, 0.0);
-    			JSONArray rates = readArray("node-rates",   node);
-    			
-    			// Store rates
-    			for (Object j : rates) {
-    				if (j instanceof JSONObject) {
-    					JSONObject rate = (JSONObject) j;
-    					
-    					String from = rate.getString("rate-from");
-    					double eff  = readDouble("rate-efficiency", rate, 1.0);
-    					
-    					rs.add(new Pair<>(name, new Pair<>(from, eff)));
-    				}
-    			}
-    			
-    			// Store results.
-    			ns.put(name, new MyVertex(name, demand));
-    		}
-    	}
-    	
-    	// Now that all nodes have been added we can add their rates.
-    	for (Pair<String, Pair<String, Double>> pair : rs) {
-    		MyVertex vertex = ns.get(pair.getKey());
-    		vertex.addRate(
-    				ns.get(pair.getValue().getKey()), 
-    				pair.getValue().getValue());
-    	}
-    	
-    	// Lastly we parse all edges.
-    	Set<Pair<MyEdge, Pair<MyVertex, MyVertex>>> es = new HashSet<>(); 
-    	for (Object o : edges) {
-    		if (o instanceof JSONObject) {
-    			JSONObject edge = (JSONObject) o;
-    			
-    			// Read fields.
-    			String from  = edge.getString("edge-from");
-    			String to    = edge.getString("edge-to");
-    			double loss  = readDouble("edge-loss",  edge, 0.0);
-    			double share = readDouble("edge-share", edge, 1.0);
-    			
-    			MyVertex f = ns.get(from);
-    			MyVertex t = ns.get(to);
-    			
-    			es.add(new Pair<>(new MyEdge(loss, share), new Pair<>(f, t)));
-    		}
-    	}
-    	
-    	// We can then create the graph.
-    	DirectedGraph<MyVertex, MyEdge> graph = new DirectedGraph<>();
-    	for (Pair<MyEdge, Pair<MyVertex, MyVertex>> pair : es) {
-    		graph.addEdge(
-    				pair.getKey(), 
-    				pair.getValue().getKey(), 
-    				pair.getValue().getValue());
-    	}
+		JSONArray vertices = example.getJSONArray("vertices");
+		
+		// Read vertices, 'vs', and their inputs, 'is.
+		Map<String, JSONArray> is = new HashMap<>();
+		Map<String, MyVertex>  vs = new HashMap<>();
+		for (Object o : vertices) {
+			if (o instanceof JSONObject) {
+				JSONObject vertex = (JSONObject) o;
+				
+				// Read and store vertex fields.
+				String    name   = vertex.getString("name");
+				double    demand = readDouble("demand", vertex, 0);
+				vs.put(name, new MyVertex(name, demand));
+
+				// Read and store inputs, we'll add these once all vertices are read.
+				if (vertex.elem("inputs")) {
+					is.put(name, vertex.getJSONArray("inputs"));
+				}
+			}
+		}
+		
+		// Create graph from the parsed vertices and edges.
+		DirectedGraph<MyVertex, MyEdge> graph = new DirectedGraph<>();
+		for (Entry<String, JSONArray> e : is.entrySet()) {
+			MyVertex destination = vs.get(e.getKey());
+			for (Object o : e.getValue()) {
+				if (o instanceof JSONObject) {
+					JSONObject edge = (JSONObject) o;
+					
+					// Read fields.
+					String name       = edge.getString("name");
+					double share      = readDouble("share",      edge, 1);
+					double efficiency = readDouble("efficiency", edge, 1);
+					double loss       = readDouble("loss",       edge, 0);
+					MyVertex source   = vs.get(name);
+					
+					// Update source vertex.
+					source.addRate(destination, efficiency);
+					
+					// Store new edge.
+					graph.addEdge(new MyEdge(loss, share), source, destination);
+				}
+			}
+		}
     	
 		return graph;
 	}
@@ -132,11 +102,6 @@ public class Main {
 	/** Tries to lookup value of given field, returns 'def' if not found. */
 	private double readDouble(String key, JSONObject o, double def) {
 		return o.elem(key) ? o.getDouble(key) : def;
-	}
-	
-	/** Tries to lookup value of given field */
-	private JSONArray readArray(String key, JSONObject o) {
-		return o.elem(key) ? o.getJSONArray(key) : new JSONArray();
 	}
 	
 	// ------------------------------------------------------------------------

@@ -56,7 +56,7 @@ public class DirectedGraph<V extends Vertex, E extends Edge> implements Graph<V,
 			
 			// Calculate new demand.
 			double demanded = demand * edge.getShare(),
-				   brutto   = demanded / v.getEfficiency(source),
+				   brutto   = demanded / source.getEfficiency(v),
 				   netto    = brutto   / (1 - edge.getLoss());
 			
 			// Update demand.
