@@ -24,16 +24,17 @@ public class MyVertex implements Vertex {
 	// ------------------------------------------------------------------------
 	// ...
 	
-	public String getName() {
-		return this.name;
-	}
-	
 	public void addRate(MyVertex key, double value) {
 		this.efficiencies.put(key, value);
 	}
 	
 	// ------------------------------------------------------------------------
 	// Inherited methods.
+	
+	@Override
+	public String getLabel() {
+		return this.name;
+	}
 	
 	@Override
 	public double getDemand() {

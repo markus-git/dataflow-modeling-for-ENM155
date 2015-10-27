@@ -55,7 +55,35 @@ public class DirectedGraph<V extends Vertex, E extends Edge> implements Graph<V,
 	public String generateDot() {
 		calculateLevels();
 		
-		return "";
+		StringBuilder dot = new StringBuilder();
+		dot.append("digraph G {\n");
+		dot.append("\trankdir=LR\n");
+		dot.append("\tnodesep=1.0\n");
+		dot.append("\tnode[shape=Mrecord]\n\n");
+		
+		// Print vertices.
+		for (V v : getVertices()) {
+			dot.append("\t" +
+					  v.getLabel()  + "[ label=\"<f0> " + 
+					  v.getLabel()  + " |<f1> " +
+					  v.getDemand() + " \" ];\n"
+					);
+		}
+		
+		dot.append('\n');
+		
+		// Print edges.
+		for (E e : getEdges()) {
+			dot.append("\t" +
+					  getSource(e).getLabel() + " -> " +
+					  getDestination(e).getLabel() + " [ label = \"" +
+					  (e.getShare() * 100) + "% (" + (e.getLoss() * 100) + "%)\" ];\n"
+					);
+		}
+		
+		dot.append('}');
+		
+		return dot.toString();
 	}
 	
 	private void calculateLevels() {

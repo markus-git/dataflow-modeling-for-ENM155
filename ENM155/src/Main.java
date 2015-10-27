@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import graph.Graph;
 import graph.Pair;
 import graph.directed.DirectedGraph;
 import json.JSONArray;
@@ -17,6 +16,7 @@ import json.Tokenizer;
 public class Main {
 
 	public Main() {
+		
 		System.out.print("Loading example...");
 		JSONObject example = readExample();
 		System.out.println("\tDone!");
@@ -30,14 +30,17 @@ public class Main {
 		System.out.println("\tDone!");
 		
 		for (MyVertex vertex : graph.getVertices()) {
-			System.out.println("- Node " + vertex.getName() + " : " + vertex.getDemand());
+			System.out.println("- Node " + vertex.getLabel() + " : " + vertex.getDemand());
 		}
 		
 		System.out.print("Generating dot file...");
 		String dot = graph.generateDot();
 		System.out.println("\tDone!");
 		
-		System.out.println(graph.generateDot());
+		// Graphs described as dot files can either be dsiplayed using the
+		// dot languages command line utilities or using the online service
+		// located at http://webgraphviz.com.
+		System.out.println(dot);
 	}
 	
 	// ------------------------------------------------------------------------
