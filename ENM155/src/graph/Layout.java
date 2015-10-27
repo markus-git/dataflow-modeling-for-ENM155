@@ -56,11 +56,11 @@ public abstract class Layout<V, E> {
 		vertices.get(vertex).setLocation(coords);
 	}
 	
-	public void freeze(V vertex) {
+	public void lock(V vertex) {
 		staticVertices.add(vertex);
 	}
 	
-	public void thaw(V vertex) {
+	public void unlock(V vertex) {
 		staticVertices.remove(vertex);
 	}
 	

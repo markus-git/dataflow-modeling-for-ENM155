@@ -1,6 +1,8 @@
 package graph;
 
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 
 import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
@@ -33,7 +35,23 @@ public class DAGViewer<V, E> extends JPanel implements ChangeListener {
 	
 	// ------------------------------------------
 	
+	@Override
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
+	}
 	
+	private void paintGraph(Graphics g) {
+		Dimension size = getSize();
+		
+		// Draw background.
+		g.setColor(Color.white);
+		g.fillRect(0, 0, size.width, size.height);
+		
+		// Draw arrows.
+		
+		
+		// Draw vertices.
+	}
 
 	// ------------------------------------------
 	
@@ -46,9 +64,7 @@ public class DAGViewer<V, E> extends JPanel implements ChangeListener {
 	}
 	
 	public void fireEvent() {
-		for (ChangeListener c : changeListenerList.getListeners(ChangeListener.class)) {
-			c.stateChanged(new ChangeEvent(this));
-		}
+		// Hmm..
 	}
 	
 	@Override

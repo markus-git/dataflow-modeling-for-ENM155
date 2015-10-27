@@ -94,7 +94,7 @@ public class DAGLayout<V, E> extends Layout<V, E> {
 	
 	// ------------------------------------------
 	
-	public void step() {
+	private void step() {
 		if (epoch < epochMax) {
 			adjust();
 			update();
@@ -136,5 +136,11 @@ public class DAGLayout<V, E> extends Layout<V, E> {
 		if (radius > radiusMin && epoch % interval == 0) {
 			this.radius -= 1;
 		}
+	}
+	
+	// ------------------------------------------
+	
+	public Graph<V, E> getLayout() {
+		return super.getGraph();
 	}
 }
