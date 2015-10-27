@@ -63,4 +63,12 @@ public abstract class Layout<V, E> {
 	public void thaw(V vertex) {
 		staticVertices.remove(vertex);
 	}
+	
+	public Graph<V, E> getGraph() {
+		return this.graph;
+	}
+	
+	public Dimension getSize() {
+		return this.size;
+	}
 }

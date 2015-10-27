@@ -5,12 +5,22 @@ import java.awt.Dimension;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.EventListenerList;
 
 public class DAGViewer<V, E> extends JPanel implements ChangeListener {
 
 	private static final long serialVersionUID = 1L;
 	
-	DAGModel<V, E> model;
+	private EventListenerList changeListenerList = new EventListenerList();
+	private ChangeListener    changeListener     = new ChangeListener() {
+		
+		@Override
+		public void stateChanged(ChangeEvent e) {
+			fireEvent();
+		}
+	};
+	
+	private DAGModel<V, E> model;
 	
 	public DAGViewer(Layout<V, E> layout, Dimension size) {
 		this.model = new DAGModel<>(layout, size);
@@ -20,11 +30,25 @@ public class DAGViewer<V, E> extends JPanel implements ChangeListener {
 		setPreferredSize(size);
 		setFocusable(true);
 	}
+	
+	// ------------------------------------------
+	
+	
 
 	// ------------------------------------------
 	
-	private void fireEvent() {
-		
+	public void addChangeListener(ChangeListener l) {
+		changeListenerList.add(ChangeListener.class, l);
+	}
+	
+	public void removeChangeListener(ChangeListener l) {
+		changeListenerList.remove(ChangeListener.class, l);
+	}
+	
+	public void fireEvent() {
+		for (ChangeListener c : changeListenerList.getListeners(ChangeListener.class)) {
+			c.stateChanged(new ChangeEvent(this));
+		}
 	}
 	
 	@Override
