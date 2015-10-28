@@ -32,6 +32,7 @@ public class DirectedGraph<V extends Vertex, E extends Edge> implements Graph<V,
 	/** Maximum height of graph according to topological ordering (currently not used). */
 	private int height;
 	
+	/** Creates an empty directed graph. */
 	public DirectedGraph() {
 		this.vertices = new HashMap<>();
 		this.edges    = new HashMap<>();
@@ -42,13 +43,14 @@ public class DirectedGraph<V extends Vertex, E extends Edge> implements Graph<V,
 	// ------------------------------------------------------------------------
 	// ...
 	
-	/** ... */
+	/** Calculate the amount of units required to meet initial demand.  */
 	public void calculateDemands() {
 		for (V vertex : vertices.keySet()) {
 			propagateDemand(vertex);
 		}
 	}
 	
+	/** Propagate the demands of one node through the graph. */
 	private void propagateDemand(V v) {
 		double demand = v.getDemand();
 		for (E edge : getIncomingEdges(v)) {
@@ -68,6 +70,7 @@ public class DirectedGraph<V extends Vertex, E extends Edge> implements Graph<V,
 	// ------------------------------------------------------------------------
 	// ...
 	
+	@Override
 	public String generateDot() {
 		calculateLevels();
 		
@@ -102,10 +105,12 @@ public class DirectedGraph<V extends Vertex, E extends Edge> implements Graph<V,
 		return dot.toString();
 	}
 	
+	/** Round a double to limit the number of decimals used during visualization. */
 	private double round(double value, int places) {
 		 return new BigDecimal(value).setScale(places, RoundingMode.HALF_UP).doubleValue();
 	}
 	
+	/** Give a topological order to graph vertices, grouping similar levels. */
 	private void calculateLevels() {
 		for (V vertex : getVertices()) {
 			if (getPredecessors(vertex).isEmpty()) {
@@ -117,6 +122,7 @@ public class DirectedGraph<V extends Vertex, E extends Edge> implements Graph<V,
 		this.height = Collections.max(levels.values());
 	}
 	
+	/** Propagate the level of one vertex to its predecessors. */
 	private void propagateLevels(V v) {
 		int level = levels.get(v);
 		for (V child : getSuccessors(v)) {
