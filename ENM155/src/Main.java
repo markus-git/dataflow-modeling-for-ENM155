@@ -43,7 +43,7 @@ public class Main {
     /** Read example file and load main JSON object. */
 	private JSONObject readExample() {
     	try {
-    		return new JSONObject(new Tokenizer(new BufferedReader(new FileReader("example/simple.json"))));
+    		return new JSONObject(new Tokenizer(new BufferedReader(new FileReader("example/e.json"))));
     	} catch (FileNotFoundException e) {
     		throw new JSONException("Could not find example file.");
     	}

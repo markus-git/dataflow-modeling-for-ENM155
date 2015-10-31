@@ -6,11 +6,11 @@ public interface Vertex {
 	/** Name assigned to vertex. */
 	String getLabel();
 	
-	/** Current demand requested by vertex. */
-	double getDemand();
+	/** Current output of vertex. */
+	double getOutput();
 	
-	/** Request additional supply from this vertex, increasing its demand. */
-	void addDemand(double x);
+	/** Request additional supply from this vertex, increasing its output. */
+	void demandInput(double x);
 	
 	/** Efficiency of vertex 'v' when producing for supply this vertex. */
 	double getEfficiency(Vertex v);
