@@ -1,3 +1,4 @@
+package graph.directed;
 import graph.Edge;
 
 /** An implementation of the Edge interface. */

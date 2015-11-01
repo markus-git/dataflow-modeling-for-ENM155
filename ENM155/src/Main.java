@@ -5,7 +5,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import graph.directed.DirectedGraph;
+import graph.directed.MyEdge;
+import graph.directed.MyGraph;
+import graph.directed.MyVertex;
 import json.JSONArray;
 import json.JSONException;
 import json.JSONObject;
@@ -20,7 +22,7 @@ public class Main {
 		System.out.println("\tDone!");
 		
 		System.out.print("Parsing example...");
-		DirectedGraph<MyVertex, MyEdge> graph   = parseExample(example);
+		MyGraph<MyVertex, MyEdge> graph   = parseExample(example);
 		System.out.println("\tDone!");
 		
 		System.out.print("Calculating demands...");
@@ -50,7 +52,7 @@ public class Main {
 	}
     
 	/** Parse JSON object as a directed graph. */
-	private DirectedGraph<MyVertex, MyEdge> parseExample(JSONObject example) {
+	private MyGraph<MyVertex, MyEdge> parseExample(JSONObject example) {
 		JSONArray vertices = example.getJSONArray("vertices");
 		
 		// Read vertices, 'vs', and their inputs, 'is.
@@ -73,7 +75,7 @@ public class Main {
 		}
 		
 		// Create graph from the parsed vertices and edges.
-		DirectedGraph<MyVertex, MyEdge> graph = new DirectedGraph<>();
+		MyGraph<MyVertex, MyEdge> graph = new MyGraph<>();
 		for (Entry<String, JSONArray> e : is.entrySet()) {
 			MyVertex destination = vs.get(e.getKey());
 			for (Object o : e.getValue()) {

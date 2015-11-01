@@ -18,7 +18,7 @@ import graph.*;
  * @param <V> - Kind used for vertices, assumed to extend Vertex interface.
  * @param <E> - Kind used for edges, assumed to extend Edge interface.
  */
-public class DirectedGraph<V extends Vertex, E extends Edge> implements Graph<V, E> {
+public class MyGraph<V extends Vertex, E extends Edge> implements Graph<V, E> {
 
 	/** Vertices are combined with a set of incoming/outgoing edges for each vertex. */
 	private Map<V, Pair<Set<E>, Set<E>>> vertices;
@@ -33,7 +33,7 @@ public class DirectedGraph<V extends Vertex, E extends Edge> implements Graph<V,
 	@SuppressWarnings("unused") private int height;
 	
 	/** Creates an empty directed graph. */
-	public DirectedGraph() {
+	public MyGraph() {
 		this.vertices = new HashMap<>();
 		this.edges    = new HashMap<>();
 		this.levels   = new HashMap<>();
