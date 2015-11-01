@@ -6,7 +6,7 @@ This repository provides a skeleton of the data-flow modelling part in course EN
   * Performing graph-based algorithms.
   * Visualisation of graphs through dot files.
 
-An example of the entire development process, that is, writing a configuration file, generating a graph from that file and outputting a input/output solution, can be found in the class `Main`. Be sure to read through the example to get an general idea of how the library works.
+An example of the entire development process, that is, writing a configuration file, generating a graph from that file and outputting an input/output solution, can be found in the class `Main`. Be sure to read through the example to get an general idea of how the library works.
 
 ## Writing configuration files.
 
