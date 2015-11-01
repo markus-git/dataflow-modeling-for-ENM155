@@ -3,11 +3,13 @@ package json;
 import java.util.HashMap;
 import java.util.Map;
 
+/** Representation of JSON objects as a store of key-object pairs. */
 public class JSONObject {
 	
 	/** Mapping over fields in JSON object. */
     private final Map<String, Object> objects;
 	
+    /** Creates a JSONObject with an empty store. */
     private JSONObject() {
         this.objects = new HashMap<String, Object>();
     }
@@ -58,6 +60,7 @@ public class JSONObject {
     	return find(key) == null ? false : true;
     }
     
+    /** Tries to fetch indexed object from store. */
     private Object find(String key) {
         return key == null ? null : this.objects.get(key);
     }
@@ -67,6 +70,7 @@ public class JSONObject {
         return this.objects.remove(key);
     }
 	
+    /** Puts a new mapping into the store. */
     private JSONObject put(String key, Object value) throws JSONException {
         if (key == null) {
             throw new NullPointerException("Null key.");
@@ -204,6 +208,7 @@ public class JSONObject {
         }
     }
     
+    /** Tries to fetch a JSON object associated with the key. */
     public JSONObject getJSONObject(String key) throws JSONException {
         Object object = this.get(key);
         if (object instanceof JSONObject) {
@@ -213,6 +218,7 @@ public class JSONObject {
         }
     }
     
+    /** Tries to fetch a JSON array associated with the key. */
     public JSONArray getJSONArray(String key) throws JSONException {
         Object object = get(key);
         if (object instanceof JSONArray) {

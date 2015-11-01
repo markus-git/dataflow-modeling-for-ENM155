@@ -1,5 +1,6 @@
 package json;
 
+/** Runtime exception used for reporting JSON specific exceptions. */
 public class JSONException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;

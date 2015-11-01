@@ -12,25 +12,19 @@ public class MyVertex implements Vertex {
 	/** Number of units produced by this vertex. */
 	private double output;
 	
-	/** Number of units consumed bt his vertex. */
+	/** Number of units consumed by this vertex. */
 	private double input;
 	
 	/** Mapping over transfer efficiencies between this node and others. */
 	private Map<MyVertex, Double> efficiencies;
 	
-	public MyVertex(String name) {
-		this(name, 0.0);
-	}
-	
+	/** Instantiate a vertex with the given name, output and an input of zero. */
 	public MyVertex(String name, double output) {
 		this.name         = name;
 		this.output       = output;
 		this.input        = 0;
 		this.efficiencies = new HashMap<>();
 	}
-	
-	// ------------------------------------------------------------------------
-	// ...
 	
 	/** Introduce a new transfer mapping. */
 	public void addRate(MyVertex key, double value) {

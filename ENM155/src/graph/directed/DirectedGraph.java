@@ -41,7 +41,7 @@ public class DirectedGraph<V extends Vertex, E extends Edge> implements Graph<V,
 	}
 	
 	// ------------------------------------------------------------------------
-	// ...
+	// Implementation of a Input/Output satisfy algorithm.
 	
 	/** Calculate the amount of units required to meet initial demand.  */
 	public void calculateDemands() {
@@ -75,7 +75,7 @@ public class DirectedGraph<V extends Vertex, E extends Edge> implements Graph<V,
 	}
 	
 	// ------------------------------------------------------------------------
-	// ...
+	// Visualization.
 	
 	@Override
 	public String generateDot() {

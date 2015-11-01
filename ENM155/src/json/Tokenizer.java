@@ -4,18 +4,25 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 
-/**
- * You probably do not need to understand this module. It simply tries
- * to read tokens from a given reader, returning JSON objects as it goes.
- */
+/** Interprets a stream of characters as JSON tokens. */
 public class Tokenizer {
 
+	/** End of file indicator. */
     private boolean eof;
-    private long    index;
-    private char    previous;
-    private Reader  reader;
+    
+    /** Current reading index. */
+    private long index;
+    
+    /** Previously read character (used for backtracking). */
+    private char previous;
+    
+    /** Stream from which we read tokens. */
+    private Reader reader;
+    
+    /** Use or discard previous character. */
     private boolean usePrevious;
     
+    /** Create a new token stream from the given reader. */
     public Tokenizer(Reader reader) {
     	if (reader.markSupported()) {
     		this.reader = reader;
@@ -102,7 +109,7 @@ public class Tokenizer {
     
     // ------------------------------------------
     
-    /** ... */
+    /** Helper for parsing entire strings. */
     public String nextString(char quote) throws JSONException {
         char c;
         StringBuilder sb = new StringBuilder();
@@ -155,12 +162,12 @@ public class Tokenizer {
         }
     }
     
-    /** ... */
+    /** Helper for parsing entire JSON items. */
     public Object nextValue() throws JSONException {
         char c = token();
         String string;
 
-        // ToDo: Handle more JSON things.
+        // Check for strings, objects and arrays.
         switch (c) {
             case '"':
             case '\'':
@@ -181,6 +188,7 @@ public class Tokenizer {
         }
         back();
 
+        // If none of the above, ask JSON parser for help.
         string = sb.toString().trim();
         if (string.isEmpty()) {
             throw new JSONException("Missing value");

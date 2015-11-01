@@ -3,15 +3,18 @@ package json;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/** Representation of JSON arrays, only supports JSONObjects as elements. */
 public class JSONArray implements Iterable<Object> {
 
 	/** Array elements */
     private final ArrayList<Object> array;
 	
-    public JSONArray() {
+    /** Creates a JSONArray with no elements. */
+    private JSONArray() {
         this.array = new ArrayList<Object>();
     }
 	
+    /** Constructs a JSONArray from the given token stream. */
     public JSONArray(Tokenizer x) throws JSONException {
         this();
         if (x.token() != '[') {
@@ -47,6 +50,7 @@ public class JSONArray implements Iterable<Object> {
     	return this.length() == 0;
     }
 	
+    /** Tries to fetch the indexed object. */
     private Object find(int index) {
         return (index < 0 || index >= length()) ? null : array.get(index);
     }
