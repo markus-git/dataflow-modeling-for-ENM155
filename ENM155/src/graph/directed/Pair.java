@@ -1,4 +1,4 @@
-package graph;
+package graph.directed;
 
 /** Java representation of Tuples (Pairs). */
 public class Pair<K, V> {
