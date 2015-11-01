@@ -12,6 +12,9 @@ public class MyVertex implements Vertex {
 	/** Number of units produced by this vertex. */
 	private double output;
 	
+	/** Number of units consumed bt his vertex. */
+	private double input;
+	
 	/** Mapping over transfer efficiencies between this node and others. */
 	private Map<MyVertex, Double> efficiencies;
 	
@@ -22,6 +25,7 @@ public class MyVertex implements Vertex {
 	public MyVertex(String name, double output) {
 		this.name         = name;
 		this.output       = output;
+		this.input        = 0;
 		this.efficiencies = new HashMap<>();
 	}
 	
@@ -45,10 +49,20 @@ public class MyVertex implements Vertex {
 	public double getOutput() {
 		return this.output;
 	}
+	
+	@Override
+	public double getInput() {
+		return this.input;
+	}
 
 	@Override
 	public void demandInput(double x) {
 		this.output += x;
+	}
+	
+	@Override
+	public void satisfyOutput() {
+		this.input = this.output;
 	}
 
 	@Override

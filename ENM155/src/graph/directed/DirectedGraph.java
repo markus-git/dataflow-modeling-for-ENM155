@@ -2,12 +2,10 @@ package graph.directed;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -47,23 +45,17 @@ public class DirectedGraph<V extends Vertex, E extends Edge> implements Graph<V,
 	
 	/** Calculate the amount of units required to meet initial demand.  */
 	public void calculateDemands() {
-		// Select all vertices with some initial output.
-		List<V> roots = new ArrayList<>();
-		for (V vertex : vertices.keySet()) {
-			if (vertex.getOutput() > 0) {
-				roots.add(vertex);
-			}
-		}
-		
-		// Propagate output needs of roots throughout graph.
-		for (V vertex : roots) {
+		for (V vertex : getVertices()) {
 			propagateDemand(vertex);
 		}
 	}
 	
 	/** Propagate the demands of one node through the graph. */
 	private void propagateDemand(V v) {
-		double output = v.getOutput();
+		// Calculate demanded output of vertex.
+		double output = v.getOutput() - v.getInput();
+		
+		// Request the necessary supply from all predecessors to satisfy output. 
 		for (E edge : getIncomingEdges(v)) {
 			V source = getSource(edge);
 			
@@ -77,6 +69,9 @@ public class DirectedGraph<V extends Vertex, E extends Edge> implements Graph<V,
 			source.demandInput(consumed);
 			propagateDemand(source);
 		}
+		
+		// Once we have finished all requests, mark output as satisfied.
+		v.satisfyOutput();
 	}
 	
 	// ------------------------------------------------------------------------
@@ -108,7 +103,8 @@ public class DirectedGraph<V extends Vertex, E extends Edge> implements Graph<V,
 			dot.append("\t" +
 					  getSource(e).getLabel() + " -> " +
 					  getDestination(e).getLabel() + " [ label = \"" +
-					  (e.getShare() * 100) + "% (" + (e.getLoss() * 100) + "%)\" ];\n"
+					  round(e.getShare() * 100, 3) + "% (" + 
+					  round(e.getLoss()  * 100, 3) + "%)\" ];\n"
 					);
 		}
 		
