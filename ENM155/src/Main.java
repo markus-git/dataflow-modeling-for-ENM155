@@ -33,9 +33,7 @@ public class Main {
 		String dot = graph.generateDot();
 		System.out.println("\tDone!");
 		
-		// Graphs described as dot files can either be displayed using the
-		// dot languages command line utilities or using the online service
-		// located at http://webgraphviz.com.
+		// The output of graph.generateDot() can be used to visualize your graph.
 		System.out.println('\n' + dot);
 	}
 	
