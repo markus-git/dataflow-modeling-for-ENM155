@@ -45,7 +45,7 @@ public class Main {
     /** Read example file and load main JSON object. */
 	private JSONObject readExample() {
     	try {
-    		return new JSONObject(new Tokenizer(new BufferedReader(new FileReader("example/e.json"))));
+    		return new JSONObject(new Tokenizer(new BufferedReader(new FileReader("example/simple.json"))));
     	} catch (FileNotFoundException e) {
     		throw new JSONException("Could not find example file.");
     	}
@@ -86,14 +86,13 @@ public class Main {
 					String name       = edge.getString("name");
 					double share      = readDouble("share",      edge, 1);
 					double efficiency = readDouble("efficiency", edge, 1);
-					double loss       = readDouble("loss",       edge, 0);
 					MyVertex source   = vs.get(name);
 					
 					// Update source vertex.
 					source.addRate(destination, efficiency);
 					
 					// Store new edge.
-					graph.addEdge(new MyEdge(loss, share), source, destination);
+					graph.addEdge(new MyEdge(share), source, destination);
 				}
 			}
 		}

@@ -60,10 +60,9 @@ public class MyGraph<V extends Vertex, E extends Edge> implements Graph<V, E> {
 			V source = getSource(edge);
 			
 			// Calculate new demand.
-			double consumed = output          // Consumed units, adjusted for
-					* edge.getShare()         //  - our share 
-					/ source.getEfficiency(v) //  - efficiency loss
-					/ (1 - edge.getLoss());   //  - loss during transition
+			double consumed = output           // Consumed units, adjusted for
+					* edge.getShare()          //  - our share 
+					/ source.getEfficiency(v); //  - efficiency loss
 			
 			// Update for new demand.
 			source.demandInput(consumed);
@@ -103,8 +102,7 @@ public class MyGraph<V extends Vertex, E extends Edge> implements Graph<V, E> {
 			dot.append("\t" +
 					  getSource(e).getLabel() + " -> " +
 					  getDestination(e).getLabel() + " [ label = \"" +
-					  round(e.getShare() * 100, 3) + "% (" + 
-					  round(e.getLoss()  * 100, 3) + "%)\" ];\n"
+					  round(e.getShare() * 100, 3) + "% \" ];\n"
 					);
 		}
 		

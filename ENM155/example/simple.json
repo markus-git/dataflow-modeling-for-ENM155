@@ -2,16 +2,16 @@
   "vertices" : [
     {
       "name"   : "A",
-      "demand" : 200.00,
+      "demand" : 10.00,
       "inputs" : [
         {
           "name"  : "B",
           "share" : 1.00,
-          "efficiency" : 0.75,
-          "loss"  : 0.05,
+          "efficiency" : 0.50
         }]
     },
     {
       "name" : "B"
-    }]
+    }
+  ]
 }
