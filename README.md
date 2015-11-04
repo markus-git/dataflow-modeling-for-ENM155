@@ -20,7 +20,7 @@ Once the configuration file has been parsed, as shown in `readExample`, a graph 
 
 Once a configuration file has been read and parsed, the generated graph is ready to be used for calculating input/output requirements.
 
-Graphs are specified by the interfaces `Graph`, `Vertex`, and `Edge`, these can all be found under `enm155/src/graph`. An example implementation of these interfaces is included under `enm155/src/graph/directed`, make sure to read through these and understand them. Also, an implementation of the input/output algorithm is supplied by the `calculateDemands` method in `MyGraph`.
+Graphs are specified by the interfaces `Graph`, `Vertex`, and `Edge`, these can all be found under `enm155/src/graph`. An example implementation of the interfaces is included under `enm155/src/graph/directed`, make sure to read through and understand them. Also, an implementation of the input/output algorithm is supplied by the `calculateDemands` method in `MyGraph`.
 
 ## Visualisation of graphs.
 
