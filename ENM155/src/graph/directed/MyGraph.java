@@ -34,9 +34,9 @@ public class MyGraph<V extends Vertex, E extends Edge> implements Graph<V, E> {
 	
 	/** Creates an empty directed graph. */
 	public MyGraph() {
-		this.vertices = new HashMap<>();
-		this.edges    = new HashMap<>();
-		this.levels   = new HashMap<>();
+		this.vertices = new HashMap<V, Pair<Set<E>, Set<E>>>();
+		this.edges    = new HashMap<E, Pair<V, V>>();
+		this.levels   = new HashMap<V, Integer>();
 		this.height   = 0;
 	}
 	
@@ -240,7 +240,7 @@ public class MyGraph<V extends Vertex, E extends Edge> implements Graph<V, E> {
 		getOutgoingEdges(from).add(edge);
 		getIncomingEdges(to).add(edge);
 		
-		edges.put(edge, new Pair<>(from, to));
+		edges.put(edge, new Pair<V, V>(from, to));
 		
 		return true;
 	}
@@ -251,7 +251,12 @@ public class MyGraph<V extends Vertex, E extends Edge> implements Graph<V, E> {
 			throw new GraphException("Cannot add null vertices.");
 		}
 		if (!containsVertex(vertex)) {
-			vertices.put(vertex, new Pair<>(new HashSet<>(), new HashSet<>()));
+			vertices.put(
+					vertex, 
+					new Pair<Set<E>, Set<E>>(
+							new HashSet<E>(), 
+							new HashSet<E>()));
+			
 			return true;
 		} else {
 		    return false;	

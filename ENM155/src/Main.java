@@ -22,7 +22,7 @@ public class Main {
 		System.out.println("\tDone!");
 		
 		System.out.print("Parsing example...");
-		MyGraph<MyVertex, MyEdge> graph   = parseExample(example);
+		MyGraph<MyVertex, MyEdge> graph = parseExample(example);
 		System.out.println("\tDone!");
 		
 		System.out.print("Calculating demands...");
