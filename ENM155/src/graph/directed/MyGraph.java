@@ -89,9 +89,9 @@ public class MyGraph<V extends Vertex, E extends Edge> implements Graph<V, E> {
 		// Print vertices.
 		for (V v : getVertices()) {
 			dot.append("\t" +
-					  v.getLabel()  + "[ label=\"<f0> " + 
-					  v.getLabel()  + " |<f1> " +
-					  round(v.getOutput(), 2) + " \" ];\n"
+					  v.getLabel()  + "[label=\"<f0>" + 
+					  v.getLabel()  + " |<f1>" +
+					  round(v.getOutput(), 2) + "\"];\n"
 					);
 		}
 		
@@ -100,9 +100,9 @@ public class MyGraph<V extends Vertex, E extends Edge> implements Graph<V, E> {
 		// Print edges.
 		for (E e : getEdges()) {
 			dot.append("\t" +
-					  getSource(e).getLabel() + " -> " +
-					  getDestination(e).getLabel() + " [ label = \"" +
-					  round(e.getShare() * 100, 3) + "% \" ];\n"
+					  getSource(e).getLabel() + "->" +
+					  getDestination(e).getLabel() + "[label=\"" +
+					  round(e.getShare() * 100, 3) + "% \"];\n"
 					);
 		}
 		
